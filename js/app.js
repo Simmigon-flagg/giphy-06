@@ -89,45 +89,51 @@ $("#add-topic").on("click", function (event) {
 	}
 });
 
-// Function for displaying the topic info
-// We're adding a click event listener to all elements with the class "topic"
-// We're adding the event listener to the document because it will work for dynamically generated elements
-// $(".topics").on("click") will only add listeners to elements that are on the page at that time
+
 $(document).on("click", ".topic", api_callBack);
 
 // Calling the renderButtons function to display the intial buttons
 renderButtons();
 
 
-
-
-
-
-
 // Generic function for capturing the topic name from the data-attribute
 function api_callBack() {
 
 	var query = $(this).attr("data-name");
-	alert(query);
+	// alert(query);
 	var apikey = "api_key=ZSOGW84tk3o5bG2qlXuywgLfM6S5mqxV";
 	var queryURL = "http://api.giphy.com/v1/gifs/search?" + apikey + "&q=" + query + "&limit=1&offset=0&rating=G&lang=en";
 
+	// Performing an AJAX request with the queryURL
 	$.ajax({
 		url: queryURL,
 		method: "GET"
-	}).then(function (response) {
-		console.log(response);
+	})
+		// After data comes back from the request
+		.then(function (response) {
+			// console.log(queryURL);
+			// storing the data from the AJAX request in the results variable
+			var results = response.data;
+			$.each(results, function (index, value) {
+				// console.log(index + ": " + value);
+				var topicDIV = $("<div>");
+				// Creating a paragraph tag with the result item's rating
+				var p = $("<p>").text("Rating: " + results[index].rating);
+				
+				// Creating and storing an image tag
+				var topicImage = $("<img>");
 
-		results = response.data[0].title;
-		console.log(results);
+				// // Setting the src attribute of the image to a property pulled off the result item
+				topicImage.attr("src", results[index].images.fixed_height.url);
 
-		// for (var i = 0; i < nResponse; i++) {
-		// 	var newDiv = $("<div>");
-		// 	var newNumber = $("<span>").addClass(".button");
-		// 	newP.text(i + 1);
+				// Appending the paragraph and image tag to the topicDIV
+				topicDIV.append(p);
+			    topicDIV.append(topicImage);
 
-		// }
-	});
+				// Prependng the topicDIV to the HTML page in the "#gifs-appear-here" div
+				 $("#view-giphy").prepend(topicDIV);
+
+			});
+		});
+
 }
-
-//https://api.nytimes.com/svc/search/v2/articlesearch.json?q=$search&begin_date=$bDate&end_date=$eDate&limit=$responses&sort=newest&api_key=950ba3779f474d49aa1a605a55a6e151
