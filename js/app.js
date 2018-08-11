@@ -107,8 +107,6 @@ renderButtons();
 // Generic function for capturing the topic name from the data-attribute
 function api_callBack() {
 
-
-
 	var query = $(this).attr("data-name");
 	alert(query);
 	var apikey = "api_key=ZSOGW84tk3o5bG2qlXuywgLfM6S5mqxV";
