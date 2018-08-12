@@ -43,11 +43,19 @@ var topics = ["Ant-Man",
 	"Zatanna",
 	"Zatara"]
 
+$(".gif").on("click", function () {
 
-// Initial array of topics
-// var topics = ["The Matrix", "The Notebook", "Mr. Nobody", "The Lion King"];
+	var state = $(this).attr("data-state");
 
+	if (state === "still") {
+		$(this).attr("src", $(this).attr("data-animate"));
+		$(this).attr("data-state","animate")
+	} else {
+		$(this).attr("src", $(this).attr("data-still"));
+		$(this).attr("data-state","still")
 
+	}
+});
 
 // Function for displaying topic data
 function renderButtons() {
@@ -60,7 +68,7 @@ function renderButtons() {
 		// console.log(index + ": " + value);
 		var a = $("<button>");
 		// Adding a class of topics to our button
-		a.addClass("topic btn btn-dark col-lg-3");
+		a.addClass("topic top-buffer btn btn-dark col-lg-3");
 		// Adding a data-attribute
 		a.attr("data-name", value);
 		// Providing the initial button text
@@ -77,7 +85,7 @@ $("#add-topic").on("click", function (event) {
 	event.preventDefault();
 	// This line grabs the input from the textbox
 	var topic = $("#topic-input").val().trim();
-	var topic = $("#topic-input").val().trim();
+
 	if (topic !== "") {
 		//Clear Search bar Topic
 		$("#topic-input").val("");
@@ -89,21 +97,20 @@ $("#add-topic").on("click", function (event) {
 	}
 });
 
-
 $(document).on("click", ".topic", api_callBack);
 
 // Calling the renderButtons function to display the intial buttons
 renderButtons();
 
-
 // Generic function for capturing the topic name from the data-attribute
 function api_callBack() {
 
 	var query = $(this).attr("data-name");
-	// alert(query);
+	var limit = 1;
+	var rating = "G";
 	var apikey = "api_key=ZSOGW84tk3o5bG2qlXuywgLfM6S5mqxV";
-	var queryURL = "http://api.giphy.com/v1/gifs/search?" + apikey + "&q=" + query + "&limit=1&offset=0&rating=G&lang=en";
-
+	var queryURL = "http://api.giphy.com/v1/gifs/search?" + apikey + "&q=" + query + "&limit="+limit+"&offset=0&rating="+rating+"&lang=en";
+	console.log(queryURL);
 	// Performing an AJAX request with the queryURL
 	$.ajax({
 		url: queryURL,
@@ -114,26 +121,27 @@ function api_callBack() {
 			// console.log(queryURL);
 			// storing the data from the AJAX request in the results variable
 			var results = response.data;
+			console.log(results[0]);
 			$.each(results, function (index, value) {
 				// console.log(index + ": " + value);
 				var topicDIV = $("<div>");
 				// Creating a paragraph tag with the result item's rating
 				var p = $("<p>").text("Rating: " + results[index].rating);
-				
+
 				// Creating and storing an image tag
 				var topicImage = $("<img>");
 
 				// // Setting the src attribute of the image to a property pulled off the result item
-				topicImage.attr("src", results[index].images.fixed_height.url);
+				topicImage.attr("src", results[index].images.fixed_height_small_still.url);
+				// topicImage.attr("src", results[index].images.fixed_height.url);
 
 				// Appending the paragraph and image tag to the topicDIV
 				topicDIV.append(p);
-			    topicDIV.append(topicImage);
+				topicDIV.append(topicImage);
 
 				// Prependng the topicDIV to the HTML page in the "#gifs-appear-here" div
-				 $("#view-giphy").prepend(topicDIV);
+				$("#view-giphy").prepend(topicDIV);
 
 			});
 		});
-
 }
