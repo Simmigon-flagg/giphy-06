@@ -43,19 +43,7 @@ var topics = ["Ant-Man",
 	"Zatanna",
 	"Zatara"]
 
-$(".gif").on("click", function () {
 
-	var state = $(this).attr("data-state");
-
-	if (state === "still") {
-		$(this).attr("src", $(this).attr("data-animate"));
-		$(this).attr("data-state","animate")
-	} else {
-		$(this).attr("src", $(this).attr("data-still"));
-		$(this).attr("data-state","still")
-
-	}
-});
 
 // Function for displaying topic data
 function renderButtons() {
@@ -71,6 +59,7 @@ function renderButtons() {
 		a.addClass("topic top-buffer btn btn-dark col-lg-3");
 		// Adding a data-attribute
 		a.attr("data-name", value);
+
 		// Providing the initial button text
 		a.text(value);
 		// Adding the button to the addbutton div
@@ -104,13 +93,13 @@ renderButtons();
 
 // Generic function for capturing the topic name from the data-attribute
 function api_callBack() {
-
-	var query = $(this).attr("data-name");
+	event.preventDefault();
+	var q = $(this).attr("data-name");
 	var limit = 1;
 	var rating = "G";
 	var apikey = "api_key=ZSOGW84tk3o5bG2qlXuywgLfM6S5mqxV";
-	var queryURL = "http://api.giphy.com/v1/gifs/search?" + apikey + "&q=" + query + "&limit="+limit+"&offset=0&rating="+rating+"&lang=en";
-	console.log(queryURL);
+	var queryURL = "http://api.giphy.com/v1/gifs/search?" + apikey + "&q=" + q + "&limit=" + limit + "&offset=0&rating=" + rating + "&lang=en";
+	// console.log(queryURL);
 	// Performing an AJAX request with the queryURL
 	$.ajax({
 		url: queryURL,
@@ -121,27 +110,46 @@ function api_callBack() {
 			// console.log(queryURL);
 			// storing the data from the AJAX request in the results variable
 			var results = response.data;
-			console.log(results[0]);
+			// console.log(results[0]);
 			$.each(results, function (index, value) {
 				// console.log(index + ": " + value);
-				var topicDIV = $("<div>");
+				var topicDIV = $("<p>");
 				// Creating a paragraph tag with the result item's rating
 				var p = $("<p>").text("Rating: " + results[index].rating);
 
-				// Creating and storing an image tag
 				var topicImage = $("<img>");
+				topicImage.addClass("gif");
 
-				// // Setting the src attribute of the image to a property pulled off the result item
-				topicImage.attr("src", results[index].images.fixed_height_small_still.url);
-				// topicImage.attr("src", results[index].images.fixed_height.url);
-
-				// Appending the paragraph and image tag to the topicDIV
+				topicImage.attr("src", results[index].images.fixed_height_still.url);
+				topicImage.attr("data-still", results[index].images.fixed_height_still.url);
+				topicImage.attr("data-animate", results[index].images.fixed_height.url);
+				topicImage.attr("data-state", "still");
 				topicDIV.append(p);
 				topicDIV.append(topicImage);
-
-				// Prependng the topicDIV to the HTML page in the "#gifs-appear-here" div
 				$("#view-giphy").prepend(topicDIV);
-
 			});
+
 		});
+}
+
+$(document).on("click", ".gif", animate);
+
+function animate() {
+	// event.preventDefault();
+	$(".gif").on("click", function () {
+		console.log("Here");
+		// The attr jQuery method allows us to get or set the value of any attribute on our HTML element
+		var state = $(this).attr("data-state");
+		// If the clicked image's state is still, update its src attribute to what its data-animate value is.
+		// Then, set the image's data-state to animate
+		// Else set src to the data-still value
+		if (state === "still") {
+			$(this).attr("src", $(this).attr("data-animate"));
+			$(this).attr("data-state", "animate");
+		} else {
+			$(this).attr("src", $(this).attr("data-still"));
+			$(this).attr("data-state", "still");
+		}
+	});
+
 }
