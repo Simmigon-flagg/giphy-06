@@ -98,8 +98,8 @@ function api_callBack() {
 	var limit = 1;
 	var rating = "G";
 	var apikey = "api_key=ZSOGW84tk3o5bG2qlXuywgLfM6S5mqxV";
-	var queryURL = "http://api.giphy.com/v1/gifs/search?" + apikey + "&q=" + q + "&limit=" + limit + "&offset=0&rating=" + rating + "&lang=en";
-	// console.log(queryURL);
+	var queryURL = "https://api.giphy.com/v1/gifs/search?" + apikey + "&q=" + q + "&limit=" + limit + "&offset=0&rating=" + rating + "&lang=en";
+	 console.log(queryURL);
 	// Performing an AJAX request with the queryURL
 	$.ajax({
 		url: queryURL,
@@ -110,7 +110,7 @@ function api_callBack() {
 			// console.log(queryURL);
 			// storing the data from the AJAX request in the results variable
 			var results = response.data;
-			// console.log(results[0]);
+			 
 			$.each(results, function (index, value) {
 				// console.log(index + ": " + value);
 				var topicDIV = $("<p>");
@@ -135,9 +135,7 @@ function api_callBack() {
 $(document).on("click", ".gif", animate);
 
 function animate() {
-	// event.preventDefault();
 	$(".gif").on("click", function () {
-		console.log("Here");
 		// The attr jQuery method allows us to get or set the value of any attribute on our HTML element
 		var state = $(this).attr("data-state");
 		// If the clicked image's state is still, update its src attribute to what its data-animate value is.
