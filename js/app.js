@@ -95,11 +95,11 @@ renderButtons();
 function api_callBack() {
 	event.preventDefault();
 	var q = $(this).attr("data-name");
-	var limit = 1;
+	var limit = 10;
 	var rating = "G";
 	var apikey = "api_key=ZSOGW84tk3o5bG2qlXuywgLfM6S5mqxV";
 	var queryURL = "https://api.giphy.com/v1/gifs/search?" + apikey + "&q=" + q + "&limit=" + limit + "&offset=0&rating=" + rating + "&lang=en";
-	 console.log(queryURL);
+	console.log(queryURL);
 	// Performing an AJAX request with the queryURL
 	$.ajax({
 		url: queryURL,
@@ -109,8 +109,9 @@ function api_callBack() {
 		.then(function (response) {
 			// console.log(queryURL);
 			// storing the data from the AJAX request in the results variable
-			var results = response.data;
-			 
+			var apiresults = response.results;
+			console.log(apiresults)
+
 			$.each(results, function (index, value) {
 				// console.log(index + ": " + value);
 				var topicDIV = $("<p>");
