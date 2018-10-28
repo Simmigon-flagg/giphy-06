@@ -95,7 +95,7 @@ renderButtons();
 function api_callBack() {
 	event.preventDefault();
 	var q = $(this).attr("data-name");
-	var limit = 10;
+	var limit = 1;
 	var rating = "G";
 	var apikey = "api_key=ZSOGW84tk3o5bG2qlXuywgLfM6S5mqxV";
 	var queryURL = "https://api.giphy.com/v1/gifs/search?" + apikey + "&q=" + q + "&limit=" + limit + "&offset=0&rating=" + rating + "&lang=en";
